@@ -5,9 +5,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "deploy": "git push -f git@github.com:moshe-pinhasi/serverless-example.git master:gh-pages"
+    "pre-deploy": "cd dist && git init && git add . && git commit -m \"deploy\"",
+    "deploy": "npm run build && npm run pre-deploy && cd dist && git push -f git@github.com:misterBIT/serverless-example.git master:gh-pages"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "firebase": "^5.7.3",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.21",

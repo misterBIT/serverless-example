@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const webpush = {
     mail: 'mailto:someemail@email.com',
     publicKey: 'BLc-s9wisrfhmLNoVKa3mqvsv7VxNZU5qFYmR3Wy-1noDQLUlaXwISm5xNx3JvHhUFjGL_sYl8DpKbRl6mZdq1M',
@@ -29,11 +31,13 @@ function configurePushSub() {
   var reg;
   navigator.serviceWorker.ready
     .then(swreg => {
+      console.log('NOTIF: SW Ready');
       reg = swreg;
       return swreg.pushManager.getSubscription();
     })
     .then(sub => {
-      if (sub !== null) return;
+      console.log('NOTIF: sub', !!sub);
+      if (sub) return;
 
       var vapidPublicKey = webpush.publicKey;
       // create new one. when creating new one need to protect the push messages
@@ -44,16 +48,17 @@ function configurePushSub() {
       });
     })
     .then(newSub => {
-      console.log('newSub', newSub);
       if (!newSub) return;
-      return fetch(`${databaseURL}/subscriptions.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify(newSub)
-      });
+      console.log('NOTIF: newSub', newSub);
+      return axios.post(`${databaseURL}/subscriptions.json`, newSub)
+      // return fetch(`${databaseURL}/subscriptions.json`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Accept: 'application/json'
+      //   },
+      //   body: JSON.stringify(newSub)
+      // });
     })
     .then(res => {
       if (res && res.ok) {
