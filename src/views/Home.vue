@@ -1,31 +1,38 @@
 <template>
   <div class="home center">
+    <button class="btn-done" @click="electionDone" v-show="isAdmin">Election Done</button>
     <section v-if="!user">
-      <h1>Identify Yourself</h1>
-      <router-link class="btn-register" to="/register">Register</router-link>
+      <h1>Please Identify</h1>
+      <router-link class="btn-register" to="/register">Identify</router-link>
     </section>
     <section v-else>
       <img class="img-user" :src="user.imageUrl">
     </section>
 
-    <section>
+    <section :class="{muted : !user}">
       <h1>Who will guide Eurovision 2019?</h1>
-      <section :disabled="!user" class="candidate" @click="vote('Assi & Rotem')">
-        <img src="../assets/img/candidate1.jpg">
-        <h3>Assi & Rotem</h3>
-      </section>
-      <section :disabled="!user" class="candidate" @click="vote('Erez & Bar')">
-        <img src="../assets/img/candidate2.jpg">
-        <h3>Erez & Bar</h3>
-      </section>
+      <div class="candidates" :class="{disabled : !user, voted: voted}">
+        <section @click="vote('Assi & Rotem')">
+          <img src="../assets/img/candidate1.jpg">
+          <h3>Assi & Rotem</h3>
+        </section>
+        <section @click="vote('Erez & Bar')">
+          <img src="../assets/img/candidate2.jpg">
+          <h3>Erez & Bar</h3>
+        </section>
+      </div>
     </section>
 
     <section class="vote-results" v-if="user && user.voteForCandidate">
       <h1>Election Results</h1>
       <bar-chart :chart-data="candidates"/>
-      <button @click="electionDone">Election Done</button>
-      <ol>
-        <li v-for="vote in votes" :key="vote.id">{{vote.name}} for {{vote.voteForCandidate}}</li>
+      <button class="btn-show" @click="shouldShowVoters=!shouldShowVoters">Show Voters</button>
+      <ol v-if="shouldShowVoters">
+        <li v-for="vote in votes" :key="vote.id">
+          <span>{{vote.name}}</span>
+          for
+          <span>{{vote.voteForCandidate}}</span>
+        </li>
       </ol>
     </section>
   </div>
@@ -37,12 +44,23 @@ import firebaseService from "@/services/firebase.service";
 
 export default {
   name: "home",
+  data() {
+    return {
+      shouldShowVoters: false
+    }
+  },
   components: {
     BarChart
   },
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    voted() {
+      return this.$store.state.user && this.$store.state.user.voteForCandidate;
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
     },
     votes() {
       return this.$store.getters.votes;
@@ -67,40 +85,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css?family=Lato:400,400i,700");
-
-.candidate {
-  display: inline-block;
-  // width:220px;
-  margin: 5px;
-  border: 1px solid gray;
-  padding: 5px;
-  border-radius: 5px;
-  text-align: center;
-  transition: 0.5s;
-  cursor: pointer;
-  transition: all 0.5s;
-}
-
-.candidate:hover {
-  background-color: gold;
-}
-
-.btn-register {
-  background-color: beige;
-}
-.center {
-  text-align: center;
-}
-
-.img-user {
-  width: 200px;
-  border-radius: 50%;
-}
-
-.vote-results {
-  background-color: lightgrey;
-  padding: 1em;
-}
 </style>
 

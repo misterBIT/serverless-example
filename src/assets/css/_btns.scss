@@ -1,0 +1,45 @@
+@mixin btn() {
+    border: 0;
+    padding: 0.5em 1em;
+    color: #ccc;
+    border-radius: 4px;
+    background: $mainColor;
+    text-decoration: none;
+    transition: 0.5s;
+    &:hover {
+      background: lighten($color: $mainColor, $amount: 20);
+      cursor: pointer;
+      color: white;
+    }
+    &:disabled {
+      background: darken($color: $mainColor, $amount: 20);
+      color: black;
+    }
+  }
+  
+  .btn-identify {
+    @include btn();
+    float: right;
+  }
+  .btn-register {
+    @include btn();
+  }
+  .btn-capture {
+      @include btn();
+      position: relative;
+      top: -40px;
+      left: 10px;
+  }
+  .btn-show {
+    @include btn();
+    margin: 10px;
+    padding: .4em;
+    font-size: .8em;
+  }
+  .btn-done {
+    @include btn();
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  

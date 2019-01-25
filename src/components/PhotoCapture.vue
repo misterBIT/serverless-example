@@ -130,27 +130,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.image-picker {
-
-}
-form {
-  width: 100%;
-}
-form input {
-  width: 100%;
-}
-.video-container {
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  position: relative;
-}
-.actions {
-  position: absolute;
-  text-align: center;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-}
 
 </style>
