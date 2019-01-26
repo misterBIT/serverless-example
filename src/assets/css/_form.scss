@@ -1,0 +1,50 @@
+.field {
+    $border-radius: 8px;
+    $sides-pd: 15px;
+    $color: rgb(173, 181, 189);
+
+    position: relative;
+    border-radius: $border-radius;
+    height: 40px;
+    margin: 0 0 20px 0; 
+    color: $color;
+
+    .field-icon {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: $sides-pd;
+      display: flex;
+      align-items: center;
+
+      &::after {
+        content: "|";
+        font-family: sans-serif;
+        margin: 0 0 0 6px;
+      }
+
+      .fas {
+        font-size: 16px;
+        color: $color;
+      }
+    }
+
+    .field-input {
+      outline: none;
+
+      margin: 0;
+      padding: 0;
+      left: 0;
+      height: 100%;
+      padding: 0 $sides-pd 0 47px;
+      border-radius: $border-radius;
+      width: 100%;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      border: 1px solid #ffffff;
+
+      &:active, &:hover, &:focus {
+        border-color: #00af00;
+      }
+    }
+}
