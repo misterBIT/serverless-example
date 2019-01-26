@@ -5,8 +5,8 @@
       <input type="file" accept="image/*" id="image-picker">
     </div>
     <div v-else class="video-container">
-      <video v-if="showVideo" ref="player" autoplay playsinline width="320" height="360"></video>
-      <canvas v-else ref="canvas" width="320" height="360"></canvas>
+      <video v-show="showVideo" ref="player" autoplay playsinline></video>
+      <canvas v-show="!showVideo" ref="canvas" width="320" height="360"></canvas>
       <div class="center">
         <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">Capture</button>
         <button type="button" class="btn-capture" @click.prevent="cancel" v-else>🗑</button>
@@ -29,9 +29,6 @@ export default {
     };
   },
   mounted() {
-    this.videoPlayer = this.$refs.player;
-    this.canvasElement = this.$refs.canvas;
-
     this.streamUserMediaVideo();
   },
   computed: {},
@@ -44,7 +41,7 @@ export default {
 
       navigator.mediaDevices
         .getUserMedia({ video: true })
-        .then(stream => (this.videoPlayer.srcObject = stream))
+        .then(stream => (this.$refs.player.srcObject = stream))
         .catch(err => {
           this.pickImage = true;
           console.error("could not open the camera", err);
@@ -52,20 +49,20 @@ export default {
     },
     capture() {
       this.showVideo = false;
-      var context = this.canvasElement.getContext("2d");
+      var context = this.$refs.canvas.getContext("2d");
       context.drawImage(
-        this.videoPlayer,
+        this.$refs.player,
         0,
         0,
-        this.canvasElement.width,
-        this.canvasElement.height
+        this.$refs.canvas.width,
+        this.$refs.canvas.height
 
-        // this.videoPlayer.videoHeight /
-        //   (this.videoPlayer.videoWidth / this.canvasElement.width)
+        // this.$refs.player.videoHeight /
+        //   (this.$refs.player.videoWidth / this.$refs.canvas.width)
       );
       this.stopVideoStream();
-      // const picture = this.dataURItoBlob(this.canvasElement.toDataURL());
-      const picture = this.canvasElement.toDataURL();
+      // const picture = this.dataURItoBlob(this.$refs.canvas.toDataURL());
+      const picture = this.$refs.canvas.toDataURL();
       this.showVideo = false;
       this.$emit(EVENTS.ON_CAPTURE, picture);
     },
@@ -76,8 +73,8 @@ export default {
       this.$emit(EVENTS.ON_CLEAR);
     },
     stopVideoStream() {
-      if (!this.videoPlayer.srcObject) return;
-      this.videoPlayer.srcObject.getVideoTracks().forEach(track => {
+      if (!this.$refs.player.srcObject) return;
+      this.$refs.player.srcObject.getVideoTracks().forEach(track => {
         track.stop();
       });
     },
@@ -104,5 +101,10 @@ export default {
 <style lang="scss" scoped>
 canvas {
   border: 1px solid lightgrey;
+}
+video {
+  width: 320px;
+  height: 360px;
+  background-color: darkgray;
 }
 </style>
