@@ -24,11 +24,11 @@
   .btn-register {
     @include btn();
   }
-  .btn-capture {
+  .btn-set-photo {
       @include btn();
       position: relative;
-      top: -40px;
-      left: 10px;
+      top: -60px;
+      left: 20px;
   }
   .btn-show {
     @include btn();
@@ -41,5 +41,8 @@
     position: absolute;
     top: 20px;
     right: 20px;
+  }
+  .btn-capture {
+    @include btn();
   }
   

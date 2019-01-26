@@ -1,31 +1,15 @@
 <template>
-  <div class="image-picker">
+  <div class="photo-capture">
     <div v-if="pickImage">
-      <h6>Pick an Image</h6>
+      <h2>Upload a clear Photo</h2>
       <input type="file" accept="image/*" id="image-picker">
     </div>
     <div v-else class="video-container">
-      <video
-        class="video"
-        ref="player"
-        autoplay
-        :style="videoStyle"
-        playsinline
-      ></video>
-      <canvas ref="canvas" :style="canvasStyle"></canvas>
-      <div class="actions is-clearfix">
-        <button
-          type="button"
-          @click.prevent="capture"
-          class="button is-warning is-rounded is-large"
-          v-show="!captured"
-        >Capture</button>
-        <button
-          type="button"
-          class="button is-danger is-rounded is-pulled-right"
-          @click.prevent="cancel"
-          v-show="captured"
-        >🗑</button>
+      <video v-if="showVideo" ref="player" autoplay playsinline width="320" height="360"></video>
+      <canvas v-else ref="canvas" width="320" height="360"></canvas>
+      <div class="center">
+        <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">Capture</button>
+        <button type="button" class="btn-capture" @click.prevent="cancel" v-else>🗑</button>
       </div>
     </div>
   </div>
@@ -41,14 +25,23 @@ export default {
   data() {
     return {
       showVideo: true,
-      pickImage: true,
-      stream: null,
-      captured: false
+      pickImage: false,
     };
   },
-  created() {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      this.pickImage = false;
+  mounted() {
+    this.videoPlayer = this.$refs.player;
+    this.canvasElement = this.$refs.canvas;
+
+    this.streamUserMediaVideo();
+  },
+  computed: {},
+  methods: {
+    streamUserMediaVideo() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        this.pickImage = true;
+        return;
+      }
+
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(stream => (this.videoPlayer.srcObject = stream))
@@ -56,21 +49,7 @@ export default {
           this.pickImage = true;
           console.error("could not open the camera", err);
         });
-    }
-  },
-  mounted() {
-    this.videoPlayer = this.$refs.player;
-    this.canvasElement = this.$refs.canvas;
-  },
-  computed: {
-    videoStyle() {
-      return { display: this.showVideo ? "block" : "none" };
     },
-    canvasStyle() {
-      return { display: this.showVideo ? "none" : "block" };
-    }
-  },
-  methods: {
     capture() {
       this.showVideo = false;
       var context = this.canvasElement.getContext("2d");
@@ -79,31 +58,28 @@ export default {
         0,
         0,
         this.canvasElement.width,
-        this.videoPlayer.videoHeight /
-          (this.videoPlayer.videoWidth / this.canvasElement.width)
+        this.canvasElement.height
+
+        // this.videoPlayer.videoHeight /
+        //   (this.videoPlayer.videoWidth / this.canvasElement.width)
       );
-      this.videoPlayer.srcObject.getVideoTracks().forEach(track => {
-        track.stop();
-      });
+      this.stopVideoStream();
       // const picture = this.dataURItoBlob(this.canvasElement.toDataURL());
       const picture = this.canvasElement.toDataURL();
-      this.captured = true;
+      this.showVideo = false;
       this.$emit(EVENTS.ON_CAPTURE, picture);
     },
 
     cancel() {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(stream => {
-          this.videoPlayer.srcObject = stream;
-          this.showVideo = true;
-          this.captured = false;
-        })
-        .catch(err => {
-          console.log("could not get stream", err);
-          this.showVideo = false;
-        });
+      this.showVideo = true;
+      this.streamUserMediaVideo();
       this.$emit(EVENTS.ON_CLEAR);
+    },
+    stopVideoStream() {
+      if (!this.videoPlayer.srcObject) return;
+      this.videoPlayer.srcObject.getVideoTracks().forEach(track => {
+        track.stop();
+      });
     },
     dataURItoBlob(dataURI) {
       var byteString = atob(dataURI.split(",")[1]);
@@ -121,14 +97,12 @@ export default {
     }
   },
   destroyed() {
-    if (this.videoPlayer.srcObject) {
-      this.videoPlayer.srcObject.getVideoTracks().forEach(track => {
-        track.stop();
-      });
-    }
+    this.stopVideoStream();
   }
 };
 </script>
 <style lang="scss" scoped>
-
+canvas {
+  border: 1px solid lightgrey;
+}
 </style>

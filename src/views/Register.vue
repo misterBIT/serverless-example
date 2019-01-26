@@ -1,10 +1,10 @@
 <template>
   <div class="register-container">
     <form @submit.prevent="register">
-      <photo-capture v-if="isCameraVisible" v-model="user.imgData"></photo-capture>
+      <photo-capture  class="img-container" v-if="isCameraVisible" v-model="user.imgData"></photo-capture>
       <div v-else class="img-container">
         <img :src="getImgUrl" alt="image">
-        <button type="button" class="btn-capture" @click="showCamera">+</button>
+        <button type="button" class="btn-set-photo" @click="showCamera">+</button>
       </div>
       <input type="text" v-model="user.name" placeholder="Name *">
       <input type="text" v-model="user.email" placeholder="Email *">
