@@ -22,7 +22,9 @@
         <input type="text" class="field-input" v-model="user.email" placeholder="Email *">
       </div>
 
-      <button :disabled="!isValid" type="submit" class="btn-identify">Verify Identity</button>
+      <div class="footer">
+        <button :disabled="!isValid" type="submit" class="btn-identify">Verify Identity</button>
+      </div>
     </form>
   </div>
 </template>
@@ -81,8 +83,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: fit-content;
-  min-width: 300px;
+  max-width: 320px;
   margin: 0 auto;
   padding: 20px;
   background-color: $registerBgColor;
@@ -90,9 +91,7 @@ export default {
   border-radius: 3px;
 
   .register-title {
-    position: absolute;
-    top: -35px;
-    padding: 20px 50px;
+    padding: .5em 1em;
     background-color: $mainColor;
     text-transform: uppercase;  
     border-radius: 4px;
@@ -138,8 +137,9 @@ export default {
 
     .btn-set-photo {
       position: absolute;
-      bottom: -3px;
-      right: 5px;
+      bottom: -4px;
+      right: -6px;
+      font-size: 35px;
     }
   }
 
@@ -147,6 +147,7 @@ export default {
     width: 100%;
     overflow: hidden;
     position: relative;
+    padding: 2px;
   }
 }
 </style>

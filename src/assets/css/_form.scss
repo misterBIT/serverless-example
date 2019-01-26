@@ -41,7 +41,7 @@
       width: 100%;
       box-sizing: border-box;
       background-color: #ffffff;
-      border: 1px solid #ffffff;
+      border: 1px solid transparent;
 
       &:active, &:hover, &:focus {
         border-color: #00af00;

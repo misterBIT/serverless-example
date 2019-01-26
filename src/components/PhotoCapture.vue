@@ -5,13 +5,13 @@
       <input type="file" accept="image/*" id="image-picker">
     </div>
     <div v-else class="video-container">
-      <video v-show="showVideo" ref="player" autoplay playsinline></video>
-      <canvas v-show="!showVideo" ref="canvas"></canvas>
-      <div class="center">
+      <video v-show="showVideo" ref="player" class="camera" autoplay playsinline></video>
+      <canvas v-show="!showVideo" class="preview" ref="canvas"></canvas>
+      <div class="center photo-capture-actions">
         <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">Capture</button>
         <div v-else>
-          <button type="button" class="btn-capture" @click.prevent="cancel"><i class="fas fa-undo-alt"></i></button>
-          <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
+          <button type="button" class="btn-capture" @click.prevent="cancel">Back</button>
+          <button type="button" class="btn-capture" @click.prevent="done">Done</button>
         </div>
       </div>
     </div>
@@ -38,6 +38,8 @@ export default {
     };
   },
   mounted() {
+    this.videoPlayer = this.$refs.player;
+    this.canvasElement = this.$refs.canvas;
     this.streamUserMediaVideo();
   },
   computed: {},
@@ -58,13 +60,14 @@ export default {
     },
     capture() {
       this.showVideo = false;
-      var context = this.$refs.canvas.getContext("2d");
+      this.canvasElement.width = this.videoPlayer.videoWidth
+      this.canvasElement.height = this.videoPlayer.videoHeight
+
+      var context = this.canvasElement.getContext("2d");
       context.drawImage(
         this.$refs.player,
         0,
         0,
-        this.$refs.canvas.width,
-        this.$refs.canvas.height
       );
       this.stopVideoStream();
       this.picture = this.$refs.canvas.toDataURL();
@@ -96,23 +99,24 @@ export default {
 <style lang="scss" scoped>
 .video-container {
 
-  video {
+  .camera, .preview {
     width: 100%;
-    height: 250px;
-    margin-top: -12px;
-  }
-  
-  canvas {
-    width: 100%;
-    height: 223px;
-    padding: 2px 0 13px 0;
+    height: 202px;
+    transform: scaleX(-1);
+    filter: FlipH;
+    object-fit: cover;
   }
 
-  button {
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
+  .photo-capture-actions {
+    margin: 5px 0 0 0;
+
+    button {
+      &:not(:last-child) {
+        margin-right: 20px;
+      }
+    }  
   }
+  
 }
 
 </style>
