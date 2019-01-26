@@ -2,7 +2,12 @@
   <div class="photo-capture" v-show="enableCamera">
     <div v-if="pickImage">
       <h2>Upload a clear Photo</h2>
-      <input type="file" accept="image/*" id="image-picker">
+      <input type="file" accept="image/*" id="image-picker" @change="upload">
+
+      <div class="upload-actions">
+        <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
+      </div>
+
     </div>
     <div v-else class="video-container">
       <video v-show="showVideo" ref="player" class="camera" autoplay playsinline></video>
@@ -73,6 +78,15 @@ export default {
       this.picture = this.$refs.canvas.toDataURL();
       this.showVideo = false;
     },
+    upload(ev) {
+      this.picture = event.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = (event) =>
+          this.picture = event.target.result;
+          
+      reader.readAsDataURL(ev.target.files[0]);
+    },
 
     done() {
       this.$emit(EVENTS.ON_DONE, this.picture);
@@ -97,26 +111,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.video-container {
 
-  .camera, .preview {
-    width: 100%;
-    height: 202px;
-    transform: scaleX(-1);
-    filter: FlipH;
-    object-fit: cover;
+.photo-capture {
+  .upload-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 5px;
   }
 
-  .photo-capture-actions {
-    margin: 15px 0 0 0;
+  .video-container {
 
-    button {
-      &:not(:last-child) {
-        margin-right: 20px;
-      }
-    }  
+    .camera, .preview {
+      width: 100%;
+      height: 202px;
+      transform: scaleX(-1);
+      filter: FlipH;
+      object-fit: cover;
+    }
+
+    .photo-capture-actions {
+      margin: 15px 0 0 0;
+
+      button {
+        &:not(:last-child) {
+          margin-right: 20px;
+        }
+      }  
+    }
+    
   }
-  
 }
+
 
 </style>
