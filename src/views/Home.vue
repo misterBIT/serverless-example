@@ -6,7 +6,7 @@
       <router-link class="btn-register" to="/register">Identify</router-link>
     </section>
     <section v-else>
-      <img class="img-user" :src="user.imageUrl">
+      <img class="img-user" :src="user.imgUrl">
     </section>
 
     <section :class="{muted : !user}">

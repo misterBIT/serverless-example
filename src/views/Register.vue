@@ -3,10 +3,13 @@
     <div class="register-title">register</div>
     <form @submit.prevent="register" class="form-register">
       
-      <photo-capture  class="img-container" v-if="isCameraVisible" v-model="user.imgData"></photo-capture>
-      <div v-else class="img-container">
+      <div class="capture-container" :class="{'show': isCameraVisible}">
+        <photo-capture v-if="isCameraVisible"  @done="capturePhoto"></photo-capture>
+      </div>
+
+      <div class="img-container">
         <img :src="getImgUrl" alt="image">
-        <button type="button" class="btn-set-photo" @click="showCamera">+</button>
+        <i class="fas fa-camera btn-set-photo" @click="showCamera"></i>
       </div>
 
       <div class="field">
@@ -26,6 +29,7 @@
 
 <script>
 import photoCapture from "../components/PhotoCapture";
+import img from "@/assets/img/anonymous.png";
 
 export default {
   data() {
@@ -40,10 +44,10 @@ export default {
   },
   computed: {
     getImgUrl() {
-      return this.$store.getters.imgUrl;
+      return this.user.imgData || img;
     },
     isValid() {
-      return this.user.name && this.user.email // && this.user.imgData;
+      return this.user.name && this.user.email
     }
   },
   methods: {
@@ -52,6 +56,7 @@ export default {
     },
     capturePhoto(imgData) {
       this.user.imgData = imgData;
+      this.isCameraVisible = false
     },
     register() {
       console.log("Register", this.user);
@@ -70,36 +75,59 @@ export default {
 @import "../assets/css/_variables.scss";
 
 .register-container {
-  background-color: #e6e6e6;
+
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0 auto;
   align-items: center;
   width: fit-content;
   min-width: 300px;
+  margin: 0 auto;
   padding: 20px;
+  background-color: $registerBgColor;
   border: 3px solid #ffffff;
   border-radius: 3px;
-  position: relative;
 
   .register-title {
     position: absolute;
     top: -35px;
-    text-transform: uppercase;  
-    background-color: $registerColor;
     padding: 20px 50px;
+    background-color: $mainColor;
+    text-transform: uppercase;  
+    border-radius: 4px;
+    color: $secondaryColor;
+  }
+
+  .capture-container {
+    position: absolute;
+    z-index: 1;
+    top: 15px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    border: 1px solid #fff;
+    border-bottom: none;
+    padding: 0 1px;
+
+    background-color: $registerBgColor;
+    transform: translateY(500px);
+    transition: transform .3s;
+
+    &.show {
+      transform: translateY(0);
+    }
+
   }
 
   .img-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin: 1em auto;
+    $size: 120px;
 
-    a {
-      text-decoration: none;
-    }
+    position: relative;
+    width: $size;
+    height: $size;
+    margin: 1em auto;
 
     img {
       width: 100%;
@@ -107,10 +135,18 @@ export default {
       border: 1px solid #fff;
       border-radius: 50%;
     }
+
+    .btn-set-photo {
+      position: absolute;
+      bottom: -3px;
+      right: 5px;
+    }
   }
 
   .form-register {
     width: 100%;
+    overflow: hidden;
+    position: relative;
   }
 }
 </style>

@@ -3,15 +3,12 @@ import Vuex from "vuex";
 import firebaseService from "./services/firebase.service";
 import cloudinaryService from "./services/cloudinary.service";
 
-import img from "@/assets/img/anonymous.png";
-
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
     user: null,
     votes: [],
-    imgUrl: img
   },
   mutations: {
     setVotes(state, votes) {
@@ -22,28 +19,27 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    vote({ commit, state }, { candidate }) {
+    async vote({ commit, state }, { candidate }) {
       var user = state.user;
       user.voteForCandidate = candidate;
-      return firebaseService
-        .add("vote", user)
-        .then(() => commit("setUser", user));
+      await firebaseService.add("vote", user)
+      commit("setUser", user)
     },
-    register({ commit }, { user }) {
+    async register({ commit }, { user }) {
       const u = {
         email: user.email,
         name: user.name,
-        imageUrl: '',
+        imgUrl: '',
         voteForCandidate: null
       };
-      if (user.imgData) {
-        return cloudinaryService.upload(user.imgData).then(res => {
-          u.imgUrl = res.url;
-          commit("setUser",u);
-        });
+      if (!user.imgData) {
+        commit("setUser", u)
+        return
       }
-      commit("setUser", u);
 
+      const res = await cloudinaryService.upload(user.imgData)
+      u.imgUrl = res.url;
+      commit("setUser",u);
     }
   },
   getters: {
@@ -57,7 +53,6 @@ const store = new Vuex.Store({
         return acc;
       }, {});
     },
-    imgUrl: state => state.imgUrl
   }
 });
 

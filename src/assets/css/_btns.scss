@@ -1,7 +1,7 @@
 @mixin btn() {
     border: 0;
     padding: 0.5em 1em;
-    color: #ccc;
+    color: $secondaryColor;
     border-radius: 4px;
     background: $mainColor;
     text-decoration: none;
@@ -21,8 +21,7 @@
   @include btn();
   float: right;
   font-size: 16px;
-  background: $registerColor !important;
-  color: #fff!important;
+  color: $secondaryColor;
   width: 100%;
   height: 40px;
   border-radius: 8px;
@@ -32,10 +31,14 @@
 }
 .btn-set-photo {
     @include btn();
-    position: absolute;
-    bottom: -6px;
-    right: 9px;
-    border-radius: 50%;
+    background: none;
+    padding: 0;
+    color: $mainColor;
+
+    &:hover {
+      background: none;
+      color: lighten($color: $mainColor, $amount: 20);
+    }
 }
 .btn-show {
   @include btn();

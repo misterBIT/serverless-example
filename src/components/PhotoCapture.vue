@@ -1,31 +1,40 @@
 <template>
-  <div class="photo-capture">
+  <div class="photo-capture" v-show="enableCamera">
     <div v-if="pickImage">
       <h2>Upload a clear Photo</h2>
       <input type="file" accept="image/*" id="image-picker">
     </div>
     <div v-else class="video-container">
       <video v-show="showVideo" ref="player" autoplay playsinline></video>
-      <canvas v-show="!showVideo" ref="canvas" width="320" height="360"></canvas>
+      <canvas v-show="!showVideo" ref="canvas"></canvas>
       <div class="center">
         <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">Capture</button>
-        <button type="button" class="btn-capture" @click.prevent="cancel" v-else>🗑</button>
+        <div v-else>
+          <button type="button" class="btn-capture" @click.prevent="cancel"><i class="fas fa-undo-alt"></i></button>
+          <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 const EVENTS = {
-  ON_CAPTURE: "input",
+  ON_DONE: "done",
   ON_CLEAR: "clear"
 };
 
 export default {
-  props: {},
+  props: {
+    enableCamera: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       showVideo: true,
       pickImage: false,
+      picture: null
     };
   },
   mounted() {
@@ -56,15 +65,14 @@ export default {
         0,
         this.$refs.canvas.width,
         this.$refs.canvas.height
-
-        // this.$refs.player.videoHeight /
-        //   (this.$refs.player.videoWidth / this.$refs.canvas.width)
       );
       this.stopVideoStream();
-      // const picture = this.dataURItoBlob(this.$refs.canvas.toDataURL());
-      const picture = this.$refs.canvas.toDataURL();
+      this.picture = this.$refs.canvas.toDataURL();
       this.showVideo = false;
-      this.$emit(EVENTS.ON_CAPTURE, picture);
+    },
+
+    done() {
+      this.$emit(EVENTS.ON_DONE, this.picture);
     },
 
     cancel() {
@@ -73,38 +81,38 @@ export default {
       this.$emit(EVENTS.ON_CLEAR);
     },
     stopVideoStream() {
-      if (!this.$refs.player.srcObject) return;
+      if (! (this.$refs.player && this.$refs.player.srcObject)) return;
       this.$refs.player.srcObject.getVideoTracks().forEach(track => {
         track.stop();
       });
     },
-    dataURItoBlob(dataURI) {
-      var byteString = atob(dataURI.split(",")[1]);
-      var mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      var blob = new Blob([ab], { type: mimeString });
-      return blob;
-    }
   },
   destroyed() {
     this.stopVideoStream();
   }
 };
 </script>
+
 <style lang="scss" scoped>
-canvas {
-  border: 1px solid lightgrey;
+.video-container {
+
+  video {
+    width: 100%;
+    height: 250px;
+    margin-top: -12px;
+  }
+  
+  canvas {
+    width: 100%;
+    height: 223px;
+    padding: 2px 0 13px 0;
+  }
+
+  button {
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
 }
-video {
-  width: 320px;
-  height: 360px;
-  background-color: darkgray;
-}
+
 </style>
