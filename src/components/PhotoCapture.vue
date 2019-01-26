@@ -8,10 +8,10 @@
       <video v-show="showVideo" ref="player" class="camera" autoplay playsinline></video>
       <canvas v-show="!showVideo" class="preview" ref="canvas"></canvas>
       <div class="center photo-capture-actions">
-        <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">Capture</button>
+        <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo"><i class="fas fa-camera"></i></button>
         <div v-else>
-          <button type="button" class="btn-capture" @click.prevent="cancel">Back</button>
-          <button type="button" class="btn-capture" @click.prevent="done">Done</button>
+          <button type="button" class="btn-capture" @click.prevent="cancel"><i class="fas fa-undo-alt"></i></button>
+          <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@ export default {
   }
 
   .photo-capture-actions {
-    margin: 5px 0 0 0;
+    margin: 15px 0 0 0;
 
     button {
       &:not(:last-child) {
