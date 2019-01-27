@@ -87,15 +87,12 @@ export default {
   margin: 0 auto;
   padding: 20px;
   background-color: $registerBgColor;
-  border: 3px solid #ffffff;
-  border-radius: 3px;
+  border-radius: 6px;
 
   .register-title {
     padding: .5em 1em;
-    background-color: $mainColor;
     text-transform: uppercase;  
-    border-radius: 4px;
-    color: $secondaryColor;
+    color: $mainColor;
   }
 
   .capture-container {
@@ -106,11 +103,7 @@ export default {
     left: 0;
     right: 0;
 
-    border: 1px solid #fff;
-    border-bottom: none;
-    padding: 0 1px;
-
-    background-color: $registerBgColor;
+    background-color: #ffffff;
     transform: translateY(500px);
     transition: transform .3s;
 

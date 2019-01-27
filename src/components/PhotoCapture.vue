@@ -84,7 +84,7 @@ export default {
 
       reader.onload = (event) =>
           this.picture = event.target.result;
-          
+
       reader.readAsDataURL(ev.target.files[0]);
     },
 
@@ -130,7 +130,7 @@ export default {
     }
 
     .photo-capture-actions {
-      margin: 15px 0 0 0;
+      margin: 27px 0 0 0;
 
       button {
         &:not(:last-child) {
