@@ -1,6 +1,6 @@
 <template>
   <div class="photo-capture" v-show="enableCamera">
-    <div v-if="pickImage">
+    <div v-if="pickImage" class="upload-container">
       <h2>Upload a clear Photo</h2>
       <input type="file" accept="image/*" id="image-picker" @change="upload">
 
@@ -113,13 +113,19 @@ export default {
 <style lang="scss" scoped>
 
 .photo-capture {
+  height: 100%;
+
   .upload-actions {
     display: flex;
     justify-content: flex-end;
     padding: 10px 5px;
+    margin: 10px 0 0 0;
   }
 
   .video-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     .camera, .preview {
       width: 100%;
@@ -130,7 +136,10 @@ export default {
     }
 
     .photo-capture-actions {
-      margin: 27px 0 0 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       button {
         &:not(:last-child) {
