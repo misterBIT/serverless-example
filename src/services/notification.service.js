@@ -31,16 +31,13 @@ function configurePushSub() {
   var reg;
   navigator.serviceWorker.ready
     .then(swreg => {
-      console.log('NOTIF: SW Ready');
       reg = swreg;
       return swreg.pushManager.getSubscription();
     })
     .then(sub => {
-      console.log('NOTIF: sub', !!sub);
       if (sub) return;
 
       var vapidPublicKey = webpush.publicKey;
-      // create new one. when creating new one need to protect the push messages
       var convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
       return reg.pushManager.subscribe({
         userVisibleOnly: true,
@@ -49,16 +46,7 @@ function configurePushSub() {
     })
     .then(newSub => {
       if (!newSub) return;
-      console.log('NOTIF: newSub', newSub);
       return axios.post(`${databaseURL}/subscriptions.json`, newSub)
-      // return fetch(`${databaseURL}/subscriptions.json`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Accept: 'application/json'
-      //   },
-      //   body: JSON.stringify(newSub)
-      // });
     })
     .then(res => {
       if (res && res.ok) {

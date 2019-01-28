@@ -57,7 +57,7 @@ const store = new Vuex.Store({
 });
 
 const onVoteUpdate = votes => {
-  store.commit("setVotes", votes);
+  store.commit("setVotes", votes || []);
 };
 
 firebaseService.subscribe("vote", onVoteUpdate);
