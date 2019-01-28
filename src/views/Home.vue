@@ -26,7 +26,20 @@
     <section class="vote-results" v-if="user && user.voteForCandidate">
       <h1>Election Results</h1>
       <bar-chart :chart-data="candidates"/>
-      <button class="btn-show" @click="shouldShowVoters=!shouldShowVoters">Show Voters</button>
+      <hr>
+      <div>
+        <h2>Best Voter:</h2>
+        <img class="img-most-voter" :src="mostVoter.imgUrl">
+        <div>{{mostVoter.name}} voted {{mostVoter.votes}} times</div>
+      </div>
+      <ul>
+        <li class="voter" v-for="voter in votersWithImg" :key="voter">
+          <img class="img-voter" :src="voter.imgUrl" />
+        </li>
+      </ul>
+      <div>
+        <button class="btn-show" @click="shouldShowVoters=!shouldShowVoters">Show all Voters</button>
+      </div>
       <ol v-if="shouldShowVoters">
         <li v-for="vote in votes" :key="vote.id">
           <span>{{vote.name}}</span>
@@ -47,7 +60,7 @@ export default {
   data() {
     return {
       shouldShowVoters: false
-    }
+    };
   },
   components: {
     BarChart
@@ -71,6 +84,23 @@ export default {
         name: key,
         value: candidates[key]
       }));
+    },
+    mostVoter() {
+      const voters = this.$store.getters.voters;
+
+      let most = Object.keys(voters).reduce((prev, current) =>
+        voters[prev].votesCount > voters[current].votesCount ? prev : current
+      );
+
+      return {
+        name: most,
+        votes: voters[most].votesCount,
+        imgUrl: voters[most].imgUrl
+      };
+    },
+    votersWithImg() {
+      const voters = this.$store.getters.voters;
+      return Object.values(voters).filter(voter => voter.imgUrl);
     }
   },
   methods: {

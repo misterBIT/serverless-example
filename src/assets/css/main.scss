@@ -40,6 +40,27 @@
   border-radius: 10px;
 }
 
+.img-most-voter {
+  margin-top: 50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  // border: 2px solid $mainColor;
+}
+
+.img-voter {
+  margin-top: 50px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.voter {
+  list-style: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+
 .vote-results {
   background-color: darken($color: $bgColor, $amount: 5);
   padding: 1em;

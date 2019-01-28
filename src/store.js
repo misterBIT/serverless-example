@@ -53,6 +53,14 @@ const store = new Vuex.Store({
         return acc;
       }, {});
     },
+    voters: state => {
+      return state.votes.reduce((arr, vote) => {
+        if (!arr[vote.name]) arr[vote.name] = { votesCount: 0, imgUrl: vote.imgUrl };
+
+        arr[vote.name].votesCount++;
+        return arr;
+      }, {});
+    }
   }
 });
 
