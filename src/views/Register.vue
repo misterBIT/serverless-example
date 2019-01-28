@@ -7,9 +7,8 @@
         <photo-capture v-if="isCameraVisible"  @done="capturePhoto"></photo-capture>
       </div>
 
-      <div class="img-container">
-        <img :src="getImgUrl" alt="image">
-        <i class="fas fa-camera btn-set-photo" @click="showCamera"></i>
+      <div class="img-preview" :style="{ 'background-image': `url(${imgData})` }" @click="showCamera">
+        <i class="fas fa-camera btn-set-photo"></i>
       </div>
 
       <div class="field">
@@ -45,7 +44,8 @@ export default {
     };
   },
   computed: {
-    getImgUrl() {
+    imgData() {
+      console.log(img)
       return this.user.imgData || img;
     },
     isValid() {
@@ -87,15 +87,11 @@ export default {
   margin: 0 auto;
   padding: 20px;
   background-color: $registerBgColor;
-  border: 3px solid #ffffff;
-  border-radius: 3px;
+  border-radius: 6px;
 
   .register-title {
-    padding: .5em 1em;
-    background-color: $mainColor;
     text-transform: uppercase;  
-    border-radius: 4px;
-    color: $secondaryColor;
+    color: $mainColor;
   }
 
   .capture-container {
@@ -106,11 +102,7 @@ export default {
     left: 0;
     right: 0;
 
-    border: 1px solid #fff;
-    border-bottom: none;
-    padding: 0 1px;
-
-    background-color: $registerBgColor;
+    background-color: #ffffff;
     transform: translateY(500px);
     transition: transform .3s;
 
@@ -120,25 +112,20 @@ export default {
 
   }
 
-  .img-container {
-    $size: 120px;
-
+  .img-preview {
     position: relative;
-    width: $size;
-    height: $size;
     margin: 1em auto;
-
-    img {
-      width: 100%;
-      height: 100%;
-      border: 1px solid #fff;
-      border-radius: 50%;
-    }
+    width: 160px;
+    height: 160px;
+    background-size: cover;
+    background-position: center center;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
 
     .btn-set-photo {
       position: absolute;
       bottom: -4px;
-      right: -6px;
+      right: 7px;
       font-size: 35px;
     }
   }

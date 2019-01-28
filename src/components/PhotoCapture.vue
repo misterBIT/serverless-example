@@ -69,17 +69,22 @@ export default {
       this.canvasElement.height = this.videoPlayer.videoHeight
 
       var context = this.canvasElement.getContext("2d");
+      // flip context horizontally
+      // context.translate(this.canvasElement.width / 2, this.canvasElement.height / 2);
+      context.translate(this.canvasElement.width, 0);
+      context.scale(-1, 1);
+
       context.drawImage(
         this.$refs.player,
         0,
-        0,
+        0
       );
+      
       this.stopVideoStream();
       this.picture = this.$refs.canvas.toDataURL();
       this.showVideo = false;
     },
     upload(ev) {
-      this.picture = event.target.files[0];
       var reader = new FileReader();
 
       reader.onload = (event) =>
@@ -124,13 +129,16 @@ export default {
     .camera, .preview {
       width: 100%;
       height: 202px;
-      transform: scaleX(-1);
-      filter: FlipH;
       object-fit: cover;
     }
 
+    .camera {
+      transform: scaleX(-1);
+      filter: FlipH;
+    }
+
     .photo-capture-actions {
-      margin: 15px 0 0 0;
+      margin: 27px 0 0 0;
 
       button {
         &:not(:last-child) {
