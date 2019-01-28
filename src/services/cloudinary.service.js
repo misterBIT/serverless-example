@@ -1,10 +1,9 @@
-// const CLOUD_NAME = "daahi2yaz"
-// const UPLOAD_PRESET = '618972539517621'
-// const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`
-
-const CLOUD_NAME = "dcwibf9o5"
-const UPLOAD_PRESET = 'vt0iqgff'
+const CLOUD_NAME = 'daahi2yaz'
+const UPLOAD_PRESET = 'ezwfqugs'
 const UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`
+
+// const CLOUD_NAME = "dcwibf9o5"
+// const UPLOAD_PRESET = 'vt0iqgff'
 
 
 const upload = (file) => {

@@ -69,8 +69,6 @@ export default {
       this.canvasElement.height = this.videoPlayer.videoHeight
 
       var context = this.canvasElement.getContext("2d");
-      // flip context horizontally
-      // context.translate(this.canvasElement.width / 2, this.canvasElement.height / 2);
       context.translate(this.canvasElement.width, 0);
       context.scale(-1, 1);
 

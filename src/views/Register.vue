@@ -2,27 +2,34 @@
   <div class="register-container">
     <div class="register-title">register</div>
     <form @submit.prevent="register" class="form-register">
-      
-      <div class="capture-container" :class="{'show': isCameraVisible}">
-        <photo-capture v-if="isCameraVisible"  @done="capturePhoto"></photo-capture>
+      <div class="capture-container" :class="{show: isCameraVisible}">
+        <photo-capture v-if="isCameraVisible" @done="capturePhoto"></photo-capture>
       </div>
 
-      <div class="img-preview" :style="{ 'background-image': `url(${imgData})` }" @click="showCamera">
+      <div
+        class="img-preview"
+        :style="{ 'background-image': `url(${imgData})` }"
+        @click="showCamera"
+      >
         <i class="fas fa-camera btn-set-photo"></i>
       </div>
 
       <div class="field">
-        <label class="field-icon"><i class="fas fa-user"></i></label>
+        <label class="field-icon">
+          <i class="fas fa-user"></i>
+        </label>
         <input type="text" class="field-input" v-model="user.name" placeholder="Name *">
       </div>
-      
+
       <div class="field">
-        <label class="field-icon"><i class="fas fa-envelope"></i></label>
+        <label class="field-icon">
+          <i class="fas fa-envelope"></i>
+        </label>
         <input type="text" class="field-input" v-model="user.email" placeholder="Email *">
       </div>
 
       <div class="footer">
-        <button :disabled="!isValid" type="submit" class="btn-identify">Verify Identity</button>
+        <button :disabled="!isValid && isProcessing" type="submit" class="btn-identify">Verify Identity</button>
       </div>
     </form>
   </div>
@@ -36,6 +43,7 @@ export default {
   data() {
     return {
       isCameraVisible: false,
+      isProcessing: false,
       user: {
         name: "",
         email: "",
@@ -45,11 +53,10 @@ export default {
   },
   computed: {
     imgData() {
-      console.log(img)
       return this.user.imgData || img;
     },
     isValid() {
-      return this.user.name && this.user.email
+      return this.user.name && this.user.email;
     }
   },
   methods: {
@@ -58,13 +65,17 @@ export default {
     },
     capturePhoto(imgData) {
       this.user.imgData = imgData;
-      this.isCameraVisible = false
+      this.isCameraVisible = false;
     },
-    register() {
-      console.log("Register", this.user);
-      this.$store
-        .dispatch({ type: "register", user: this.user })
-        .then(() => this.$router.push("/"));
+    async register() {
+      this.isProcessing = true;
+      try {
+        await this.$store.dispatch({ type: "register", user: this.user });
+        this.$router.push("/");
+      } catch (err) {
+        alert('You are the problem..');
+        this.isProcessing = false;
+      }
     }
   },
   components: {
@@ -77,7 +88,6 @@ export default {
 @import "../assets/css/_variables.scss";
 
 .register-container {
-
   position: relative;
   display: flex;
   flex-direction: column;
@@ -90,7 +100,7 @@ export default {
   border-radius: 6px;
 
   .register-title {
-    text-transform: uppercase;  
+    text-transform: uppercase;
     color: $mainColor;
   }
 
@@ -104,12 +114,11 @@ export default {
 
     background-color: #ffffff;
     transform: translateY(500px);
-    transition: transform .3s;
+    transition: transform 0.3s;
 
     &.show {
       transform: translateY(0);
     }
-
   }
 
   .img-preview {

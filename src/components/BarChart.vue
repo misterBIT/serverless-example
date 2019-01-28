@@ -23,7 +23,7 @@ export default {
         }
     },
     data: () => ({
-        colors: ['red', 'blue']
+        colors: ['#c60000', '#0e62ea']
     })
 }
 </script>
