@@ -6,12 +6,16 @@
         <photo-capture v-if="isCameraVisible" @done="capturePhoto"></photo-capture>
       </div>
 
-      <div
-        class="img-preview"
-        :style="{ 'background-image': `url(${imgData})` }"
-        @click="showCamera"
-      >
-        <i class="fas fa-camera btn-set-photo"></i>
+      <div class="img-container">
+        <div
+          class="img-preview"
+          :style="{ 'background-image': `url(${imgData})` }"
+          @click="showCamera"
+        >
+          <i v-if="!isProcessing" class="fas fa-camera btn-set-photo"></i>
+          <i v-else class="fas fa-check btn-set-photo"></i>
+          <div v-if="isProcessing" class="background verify-image"></div>
+        </div>
       </div>
 
       <div class="field">
@@ -25,11 +29,15 @@
         <label class="field-icon">
           <i class="fas fa-envelope"></i>
         </label>
-        <input type="text" class="field-input" v-model="user.email" placeholder="Email *">
+        <input type="email" class="field-input" v-model="user.email" placeholder="Email *">
       </div>
 
       <div class="footer">
-        <button :disabled="!isValid && isProcessing" type="submit" class="btn-identify">Verify Identity</button>
+        <button
+          :disabled="!isValid && isProcessing"
+          type="submit"
+          class="btn-identify"
+        >Verify Identity</button>
       </div>
     </form>
   </div>
@@ -68,13 +76,15 @@ export default {
       this.isCameraVisible = false;
     },
     async register() {
-      this.isProcessing = true;
-      try {
-        await this.$store.dispatch({ type: "register", user: this.user });
-        this.$router.push("/");
-      } catch (err) {
-        alert('You are the problem..');
-        this.isProcessing = false;
+      if (this.user.name && this.user.email) {
+        this.isProcessing = true;
+        try {
+          await this.$store.dispatch({ type: "register", user: this.user });
+          this.$router.push("/");
+        } catch (err) {
+          alert("You are the problem..");
+          this.isProcessing = false;
+        }
       }
     }
   },
@@ -120,22 +130,49 @@ export default {
       transform: translateY(0);
     }
   }
+  .img-container {
+    .img-preview {
+      position: relative;
+      margin: 1em auto;
+      width: 160px;
+      height: 160px;
+      background-size: cover;
+      background-position: center center;
+      border: 1px solid #ffffff;
+      border-radius: 50%;
 
-  .img-preview {
-    position: relative;
-    margin: 1em auto;
-    width: 160px;
-    height: 160px;
-    background-size: cover;
-    background-position: center center;
-    border: 1px solid #ffffff;
-    border-radius: 50%;
+      .btn-set-photo {
+        position: absolute;
+        bottom: -4px;
+        right: 7px;
+        font-size: 35px;
+      }
+    }
 
-    .btn-set-photo {
+    .verify-image {
+      z-index: 2;
+      background-size: 20%;
+      background-image: url("../assets/img/binary-back.png");
+      animation: animatedBackground 5s linear forwards 1;
+      background-position: 0px 0px;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
       position: absolute;
-      bottom: -4px;
-      right: 7px;
-      font-size: 35px;
+      top: 0;
+      left: 0;
+    }
+
+    @keyframes animatedBackground {
+      from {
+        background-position: 0 0;
+        opacity: 1;
+      }
+
+      to {
+        background-position: 100% 0;
+        opacity: 0;
+      }
     }
   }
 

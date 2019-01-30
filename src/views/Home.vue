@@ -12,13 +12,17 @@
     <section :class="{muted : !user}">
       <h1>Who will guide Eurovision 2019?</h1>
       <div class="candidates" :class="{disabled : !user, voted: voted}">
-        <section @click="vote('Assi & Rotem')">
-          <img src="../assets/img/candidate1.jpg">
-          <h3>Assi & Rotem</h3>
+        <section @click="vote('Vue')">
+          <img src="../assets/img/vue.png">
+          <h3>Vue</h3>
         </section>
-        <section @click="vote('Erez & Bar')">
-          <img src="../assets/img/candidate2.jpg">
-          <h3>Erez & Bar</h3>
+        <section @click="vote('React')">
+          <img src="../assets/img/react.png">
+          <h3>React</h3>
+        </section>
+        <section @click="vote('Angular')">
+          <img src="../assets/img/angular.png">
+          <h3>Angular</h3>
         </section>
       </div>
     </section>
