@@ -43,7 +43,7 @@ const store = new Vuex.Store({
   },
   getters: {
     votes: state => state.votes,
-    isAdmin: state => state.user && state.user.name === "admin",
+    isAdmin: state => state.user && state.user.name === "admin" && state.user.email === "admin@misterbit.co.il",
     candidates: state => {
       return state.votes.reduce((candidateCountMap, vote) => {
         if (!candidateCountMap[vote.voteForCandidate]) candidateCountMap[vote.voteForCandidate] = 0;
@@ -59,6 +59,10 @@ const store = new Vuex.Store({
         voterCountMap[vote.name].votesCount++;
         return voterCountMap;
       }, {});
+    },
+    shuffeledVoterNames: (state, getters) => {
+      const shuffleArray = arr => arr.sort(() => Math.random() - 0.5);
+      return shuffleArray(Object.keys(getters.voters));
     }
   }
 });

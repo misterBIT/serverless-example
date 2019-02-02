@@ -1,6 +1,9 @@
 <template>
   <div class="home center">
-    <button class="btn-done" @click="electionDone" v-show="isAdmin">Election Done</button>
+    <div v-show="isAdmin">
+      <button class="btn-done" @click="electionDone">Election Done</button>
+      <router-link to="/raffle">Raffle</router-link>
+    </div>
     <section v-if="!user">
       <h1>Please Identify</h1>
       <router-link class="btn-register" to="/register">Identify</router-link>

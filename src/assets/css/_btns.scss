@@ -16,7 +16,11 @@
       color: black;
     }
 }
-  
+
+.btn {
+  @include btn();
+}
+
 .btn-identify {
   @include btn();
   float: right;
