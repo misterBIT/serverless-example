@@ -13,9 +13,14 @@ webpush.setVapidDetails(
 
 // Cloud Function to send Push Notifications!
 exports.notifySubscriptions = functions.https.onRequest((request, response) => {
+    // Allow cross origin
     cors(request, response, () => {
+
+        // Read the subscriptions 
         admin.database().ref('subscriptions').once('value')
+            // Get the value
             .then(snapshot => snapshot.val())
+            // For each subscription - sendNotification
             .then(subscriptions => {
                 Object.keys(subscriptions).forEach(subId => {
                     
@@ -26,7 +31,7 @@ exports.notifySubscriptions = functions.https.onRequest((request, response) => {
                         .sendNotification(
                             pushConfig,
                             JSON.stringify({
-                                message: 'Eurovision Election Done!',
+                                message: 'Election Done!',
                                 content: 'Come have a look'
                             })
                         )

@@ -32,33 +32,32 @@ const store = new Vuex.Store({
         imgUrl: '',
         voteForCandidate: null
       };
-      if (!user.imgData) {
-        commit("setUser", u)
-        return
-      }
-
-      const res = await cloudinaryService.upload(user.imgData)
-      u.imgUrl = res.url;
       commit("setUser",u);
+
+      if (user.imgData) {
+        const res = await cloudinaryService.upload(user.imgData)
+        u.imgUrl = res.url;
+        commit("setUser",u);
+      }
     }
   },
   getters: {
     votes: state => state.votes,
     isAdmin: state => state.user && state.user.name === "admin",
     candidates: state => {
-      return state.votes.reduce((acc, vote) => {
-        if (!acc[vote.voteForCandidate]) acc[vote.voteForCandidate] = 0;
+      return state.votes.reduce((candidateCountMap, vote) => {
+        if (!candidateCountMap[vote.voteForCandidate]) candidateCountMap[vote.voteForCandidate] = 0;
 
-        acc[vote.voteForCandidate]++;
-        return acc;
+        candidateCountMap[vote.voteForCandidate]++;
+        return candidateCountMap;
       }, {});
     },
     voters: state => {
-      return state.votes.reduce((arr, vote) => {
-        if (!arr[vote.name]) arr[vote.name] = { votesCount: 0, imgUrl: vote.imgUrl };
+      return state.votes.reduce((voterCountMap, vote) => {
+        if (!voterCountMap[vote.name]) voterCountMap[vote.name] = { votesCount: 0, imgUrl: vote.imgUrl };
 
-        arr[vote.name].votesCount++;
-        return arr;
+        voterCountMap[vote.name].votesCount++;
+        return voterCountMap;
       }, {});
     }
   }
