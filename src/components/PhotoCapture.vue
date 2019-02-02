@@ -5,18 +5,28 @@
       <input type="file" accept="image/*" id="image-picker" @change="upload">
 
       <div class="upload-actions">
-        <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
+        <button type="button" class="btn-capture" @click.prevent="done">
+          <i class="fas fa-thumbs-up"></i>
+        </button>
       </div>
-
     </div>
+
     <div v-else class="video-container">
       <video v-show="showVideo" ref="player" class="camera" autoplay playsinline></video>
+      
       <canvas v-show="!showVideo" class="preview" ref="canvas"></canvas>
+
       <div class="center photo-capture-actions">
-        <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo"><i class="fas fa-camera"></i></button>
+        <button type="button" class="btn-capture" @click.prevent="capture" v-if="showVideo">
+          <i class="fas fa-camera"></i>
+        </button>
         <div v-else>
-          <button type="button" class="btn-capture" @click.prevent="cancel"><i class="fas fa-undo-alt"></i></button>
-          <button type="button" class="btn-capture" @click.prevent="done"><i class="fas fa-thumbs-up"></i></button>
+          <button type="button" class="btn-capture" @click.prevent="cancel">
+            <i class="fas fa-undo-alt"></i>
+          </button>
+          <button type="button" class="btn-capture" @click.prevent="done">
+            <i class="fas fa-thumbs-up"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -65,19 +75,15 @@ export default {
     },
     capture() {
       this.showVideo = false;
-      this.canvasElement.width = this.videoPlayer.videoWidth
-      this.canvasElement.height = this.videoPlayer.videoHeight
+      this.canvasElement.width = this.videoPlayer.videoWidth;
+      this.canvasElement.height = this.videoPlayer.videoHeight;
 
       var context = this.canvasElement.getContext("2d");
       context.translate(this.canvasElement.width, 0);
       context.scale(-1, 1);
 
-      context.drawImage(
-        this.$refs.player,
-        0,
-        0
-      );
-      
+      context.drawImage(this.$refs.player, 0, 0);
+
       this.stopVideoStream();
       this.picture = this.$refs.canvas.toDataURL();
       this.showVideo = false;
@@ -85,9 +91,8 @@ export default {
     upload(ev) {
       var reader = new FileReader();
 
-      reader.onload = (event) =>
-          this.picture = event.target.result;
-          
+      reader.onload = event => (this.picture = event.target.result);
+
       reader.readAsDataURL(ev.target.files[0]);
     },
 
@@ -101,11 +106,11 @@ export default {
       this.$emit(EVENTS.ON_CLEAR);
     },
     stopVideoStream() {
-      if (! (this.$refs.player && this.$refs.player.srcObject)) return;
+      if (!(this.$refs.player && this.$refs.player.srcObject)) return;
       this.$refs.player.srcObject.getVideoTracks().forEach(track => {
         track.stop();
       });
-    },
+    }
   },
   destroyed() {
     this.stopVideoStream();
@@ -114,7 +119,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .photo-capture {
   .upload-actions {
     display: flex;
@@ -123,11 +127,17 @@ export default {
   }
 
   .video-container {
+    text-align: center;
 
-    .camera, .preview {
-      width: 100%;
-      height: 202px;
+    .camera,
+    .preview {
+      // width: 100%;
+      // height: 202px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
       object-fit: cover;
+      margin-top: 10px;
     }
 
     .camera {
@@ -142,11 +152,8 @@ export default {
         &:not(:last-child) {
           margin-right: 20px;
         }
-      }  
+      }
     }
-    
   }
 }
-
-
 </style>
