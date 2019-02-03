@@ -32,11 +32,13 @@
       <hr>
       <div>
         <h2>Best Voter:</h2>
-        <img class="img-most-voter" :src="mostVoter.imgUrl">
-        <div>{{mostVoter.name}} voted {{mostVoter.votes}} times</div>
+        <img v-if="mostVoter.imgUrl" class="img-most-voter" :src="mostVoter.imgUrl">
+        <img v-else class="img-most-voter" src="../assets/img/anonymous.png">
+
+        <div class="strong">{{mostVoter.name}} voted {{mostVoter.votes}} times</div>
       </div>
       <ul>
-        <li class="voter" v-for="voter in votersWithImg" :key="voter">
+        <li class="voter" v-for="voter in votersWithImg" :key="voter.imgUrl">
           <img class="img-voter" :src="voter.imgUrl">
         </li>
       </ul>
