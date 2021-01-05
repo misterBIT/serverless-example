@@ -9,7 +9,7 @@
     "deploy": "npm run build && npm run pre-deploy && cd dist && git push -f git@github.com:misterBIT/serverless-example.git master:gh-pages"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "firebase": "^5.7.3",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.21",
